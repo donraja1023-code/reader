@@ -1,0 +1,27 @@
+name: Lint Python Code
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  lint: # name of job - can be anything that YAML satisfies
+    runs-on: ubuntu-latest # ubuntu latest machine the following steps will run on
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: "pip" # no reinstall of dependency if cached for future workflows run
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install ruff
+
+      - name: Run ruff
+        run: ruff check --output-format=github
